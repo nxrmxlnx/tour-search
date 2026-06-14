@@ -11,15 +11,11 @@ export interface Product {
   id: number
   title: string
   city_id: number
-  cover_photo: CoverPhoto
-  rating: number
-  reviews_count: number
-  price_min: number
   activity_type: string
-  currency: string
-  url: string
-  description: string
-  popularity: number
+  cover_photo: CoverPhoto
+  customers_review_rating: number
+  reviews: number
+  price: string
 }
 
 export interface City {

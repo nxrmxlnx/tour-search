@@ -17,7 +17,7 @@ function fuzzyMatch(haystack: string, needle: string): boolean {
 
 export function useSearch() {
   const products = ref<Product[]>([])
-  const cities = ref<City[]>([])
+  const allCities = ref<City[]>([])
   const query = ref('')
   const selectedCityId = ref<number | null>(null)
   const loading = ref(true)
@@ -27,12 +27,17 @@ export function useSearch() {
     try {
       const [p, c] = await Promise.all([fetchProducts(), fetchCities()])
       products.value = p
-      cities.value = c
+      allCities.value = c
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Ошибка загрузки'
     } finally {
       loading.value = false
     }
+  })
+
+  const cities = computed<City[]>(() => {
+    const ids = new Set(products.value.map(p => p.city_id))
+    return allCities.value.filter(c => ids.has(c.id))
   })
 
   const filteredProducts = computed(() => {
@@ -44,7 +49,7 @@ export function useSearch() {
   })
 
   const hasActiveFilters = computed(() =>
-    query.value.length > 0 || selectedCityId.value !== null
+      query.value.length > 0 || selectedCityId.value !== null
   )
 
   function resetFilters() {
@@ -53,11 +58,10 @@ export function useSearch() {
   }
 
   function cityById(id: number): City | undefined {
-    return cities.value.find(c => c.id === id)
+    return allCities.value.find(c => c.id === id)
   }
 
   return {
-    products,
     cities,
     query,
     selectedCityId,

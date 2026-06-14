@@ -2,11 +2,11 @@
   <article class="tour-card">
     <div class="tour-card__cover-wrap">
       <img
-        class="tour-card__cover"
-        :src="coverSrc"
-        :alt="product.title"
-        loading="lazy"
-        @error="onImgError"
+          class="tour-card__cover"
+          :src="coverSrc"
+          :alt="product.title"
+          loading="lazy"
+          @error="onImgError"
       />
     </div>
 
@@ -14,20 +14,17 @@
       <div class="tour-card__meta">
         <span class="tour-card__rating">
           <svg class="tour-card__star" viewBox="0 0 12 12" fill="none">
-            <path d="M6 1l1.3 3.9H11L8.2 7l1 3.9L6 8.8 2.7 11l1-3.9L1 4.9h3.7L6 1z"
-              fill="#F5A623"/>
+            <path d="M6 1l1.3 3.9H11L8.2 7l1 3.9L6 8.8 2.7 11l1-3.9L1 4.9h3.7L6 1z" fill="#F5A623"/>
           </svg>
-          <strong>{{ formatRating(product.rating) }}</strong>
-          <span class="tour-card__reviews">({{ product.reviews_count }})</span>
+          <strong>{{ formatRating(product.customers_review_rating) }}</strong>
+          <span class="tour-card__reviews">({{ product.reviews }})</span>
         </span>
         <span v-if="cityName" class="tour-card__city">{{ cityName }}</span>
       </div>
 
       <h3 class="tour-card__title">{{ product.title }}</h3>
 
-      <p class="tour-card__price">
-        от {{ formatPrice(product.price_min) }}&nbsp;₽
-      </p>
+      <p class="tour-card__price">от {{ parsedPrice }}&nbsp;₽</p>
 
       <p class="tour-card__type">за экскурсию</p>
     </div>
@@ -55,9 +52,10 @@ function formatRating(r: number): string {
   return Number(r).toFixed(1)
 }
 
-function formatPrice(p: number): string {
-  return Number(p).toLocaleString('ru-RU')
-}
+const parsedPrice = computed(() => {
+  const num = parseFloat(props.product.price?.replace(/[^\d.]/g, '') ?? '0')
+  return isNaN(num) ? '—' : Math.round(num).toLocaleString('ru-RU')
+})
 </script>
 
 <style scoped>
