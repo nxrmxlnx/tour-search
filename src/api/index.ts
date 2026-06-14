@@ -1,10 +1,7 @@
 import type { Product, City } from '../types'
 
+const BASE = '/api'
 const PARAMS = 'api_key=873fa71c061b0c36d9ad7e47ec3635d9&username=frontend@sputnik8.com'
-
-const BASE = import.meta.env.DEV
-  ? '/api'
-  : 'https://api.sputnik8.com/v1'
 
 async function apiFetch(path: string) {
   const res = await fetch(`${BASE}${path}?${PARAMS}`)
